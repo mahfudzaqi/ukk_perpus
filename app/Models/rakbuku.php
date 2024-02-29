@@ -13,7 +13,7 @@ class rakbuku extends Model
     public $timestamps = false;
 
     public function pinjam() {
-        return $this->hasOne(peminjaman::class);
+        return $this->hasOne('App\Models\peminjaman');
     }
 
 }

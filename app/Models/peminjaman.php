@@ -9,12 +9,11 @@ class Peminjaman extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['idBuku', 'tanggalpeminjaman', 'tanggalpengembalian', 'statuspeminjaman'];
+    protected $fillable = ['idBuku', 'id', 'tanggalpeminjaman', 'tanggalpengembalian', 'statuspeminjaman'];
     protected $table = 'peminjaman';
     public $timestamps = false; // Biarkan atau hapus jika ingin menggunakan timestamps
 
     public function buku() {
-        return $this->belongsTo(RakBuku::class, 'judul');
-        // Pastikan 'judul' sesuai dengan kunci luar yang benar dalam tabel 'peminjaman'
+        return $this->belongsTo('App\Models\rakbuku', 'idBuku');
     }
 }

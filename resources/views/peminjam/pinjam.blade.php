@@ -4,7 +4,7 @@
 <div class="my-3 p-3 bg-body rounded shadow-sm">
         <!-- FORM PENCARIAN -->
         <div class="pb-3">
-          <form class="d-flex" action="" method="get">
+            <form class="d-flex" action="{{ url('peminjam') }}" method="get">
               <input class="form-control me-1" type="search" name="katakunci" value="{{ Request::get('katakunci') }}" placeholder="Masukkan kata kunci" aria-label="Search">
               <button class="btn btn-secondary" type="submit">Cari</button>
           </form>
@@ -18,18 +18,18 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="col-md-1">idPinjaman</th>
-                    <th class="col-md-2">idBuku</th>
-                    <th class="col-md-3">Tanggal peminjaman</th>
-                    <th class="col-md-3">Tanggal Pengembalian</th>
-                    <th class="col-md-2">Status</th>
-                    <th class="col-md-2">Aksi</th>
+                    <th class="col-1">idPinjaman</th>
+                    <th class="col-2">idBuku</th>
+                    <th class="col-3">Tanggal peminjaman</th>
+                    <th class="col-3">Tanggal Pengembalian</th>
+                    <th class="col-2">Status</th>
+                    <th class="col-2">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $item)
+                @foreach ($items as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->idPinjaman }}</td>
                         <td>{{ $item->idBuku}}</td>
                         <td>{{ $item->tanggalpeminjaman }}</td>
                         <td>{{ $item->tanggalpengembalian }}</td>

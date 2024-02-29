@@ -13,8 +13,7 @@ class PinjamController extends Controller
      */
     public function index()
     {
-        $data = peminjaman::with('buku')->get();
-        $data = peminjaman::orderBy('idPinjaman', 'asc')->get();
+        $items = peminjaman::orderBy('idPinjaman', 'asc')->get();
         return view('peminjam.pinjam', compact('data'));
     }
 
@@ -30,37 +29,32 @@ class PinjamController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        Session::flash('idPinjaman', $request->id);
-        Session::flash('idBuku', $request->idBuku);
-        Session::flash('tanggalpeminjaman', $request->tanggalpeminjaman);
-        Session::flash('tanggalpengembalian', $request->tanggalpengembalian);
-        Session::flash('statuspeminjaman', $request->statuspeminjaman);
+{
+    $request->validate([
+        'idBuku' => 'required',
+        'tanggalpeminjaman' => 'required',
+        'tanggalpengembalian' => 'required',
+        'statuspeminjaman' => 'required',
+    ], [
+        'idBuku.required' => 'idBuku wajib di isi',
+        'tanggalpeminjaman.required' => 'tanggal peminjaman wajib di isi',
+        'tanggalpengembalian.required' => 'tanggal pengembalian wajib di isi',
+        'statuspeminjaman.required' => 'Status wajib di isi',
+    ]);
 
-        $request->validate([
-            'idBuku' => 'required',
-            'tanggalpeminjaman' => 'required',
-            'tanggalpengembalian' => 'required',
-            'statuspeminjaman' => 'required',
-        ],[
-            'idBuku.required' => 'idBuku wajib di isi',
-            'tanggalpeminjaman.required' => 'tanggal peminjaman wajib di isi',
-            'tanggalpengembalian.required' => 'tanggal pengembalian wajib di isi',
-            'statuspeminjaman.required' => 'Status wajib di isi',
-        ]);
+    $items = [
+        'idPinjaman' => $request->idPinjaman,
+        'id' => $request->id,
+        'idBuku' => $request->idBuku,
+        'tanggalpeminjaman' => $request->tanggalpeminjaman,
+        'tanggalpengembalian' => $request->tanggalpengembalian,
+        'statuspeminjaman' => $request->statuspeminjaman,
+    ];
 
-        $data = [
-            'idPinjaman' => $request->id,
-            'idBuku' => $request->idBuku,
-            'tanggalpeminjaman' => $request->tanggalpeminjaman,
-            'tanggalpengembalian' => $request->tanggalpengembalian,
-            'statuspeminjaman' => $request->statuspeminjaman,
-        ];
+    peminjaman::create($items);
+    return redirect('peminjam')->with('success', 'Berhasil menambahkan data');
+}
 
-        peminjaman::create($data);
-        return redirect('peminjam')->with('success', 'Berhasil menambahkan data');
-
-    }
 
     /**
      * Display the specified resource.
@@ -75,16 +69,19 @@ class PinjamController extends Controller
      */
     public function edit(string $id)
     {
-        $data = peminjaman::where('idPinjaman', $id)->first();
-        return view('Peminjam.pinjam')->with('data', $data);
+        $items = peminjaman::where('idPinjaman', $id)->first();
+        if (!$items) {
+            return redirect()->route('route_name')->with('error', 'Data tidak ditemukan');
+        }
+        return view('Peminjam.pinjam')->with('data', $items);
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        // Validasi ID
+{
+    // Validasi ID
     $request->validate([
         'idBuku' => 'required',
         'tanggalpeminjaman' => 'required',
@@ -98,8 +95,9 @@ class PinjamController extends Controller
     ]);
 
     // Pembaruan Data
-    $data = [
-        'idPinjaman' => $request->id,
+    $items = [
+        'idPinjaman' => $request->idPinjaman,
+        'id' => $request->id,
         'idBuku' => $request->idBuku,
         'tanggalpeminjaman' => $request->tanggalpeminjaman,
         'tanggalpengembalian' => $request->tanggalpengembalian,
@@ -107,11 +105,11 @@ class PinjamController extends Controller
     ];
 
     // Update data berdasarkan idPinjaman
-    peminjaman::where('idPinjaman', $id)->update($data);
+    peminjaman::where('idPinjaman', $id)->update($items);
 
     return redirect()->to('peminjam')->with('success', 'Berhasil mengubah data');
-        
-    }
+}
+
 
     /**
      * Remove the specified resource from storage.
